@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "5002:5002"
+    environment:
+      - PORT=5002
+      - MONGODB_URI=${MONGODB_URI}
+      - NODE_ENV=production
+      - JWT_SECRET=${JWT_SECRET}
+    volumes:
+      - ./backend/uploads:/app/uploads
+    restart: always
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    environment:
+      - BACKEND_URL=http://backend:5002
+    restart: always
